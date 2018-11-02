@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+<body style="background:black">
+
+<div class="container"  style="background:white; margin-top: 20px; margin-bottom: 20px; border-radius: 10px;">
+    <h1>CRUD Operations  </h1><hr>
+    <button class="btn btn-primary" id="reset" data-toggle="modal" data-target="#myModal" style="float: right;">Add New</button> 
+
+<!------------- TABLE -------------->
+    <table id="tableR" class="table">
+
+    <thead>
+    <tr>
+    <th>FirstName</th>
+    <th>Lastname</th>
+    <th>Email</th>
+    <th>Phone No.</th>
+    <th>Action</th>
+    </tr>
+    </thead>
+    <tbody id="tr1">
+
+    </tbody>
+    </table>
+
+<!--------------- pager -------------->
+    <ul class="pager">
+    <li class="previous" id="pagePrev"><a href="#">Previous</a></li>
+    <li class="next" id="pageNext"><a href="#">Next</a></li>
+    </ul>
+</div>
+
+
+    
+<!------------------- The Modal 1 ----------------->
+<div>
+    <div class="modal fade" id="myModal" >
+    <div class="modal-dialog">
+    <div class="modal-content">
+
+    <!-- Modal Header -->
+    <div class="modal-header">
+    <h4 class="modal-title" style="display: inline">Create Record</h4>
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    </div>
+
+    <!-- Modal body -->
+    <div class="modal-body">
+        <p>Please fill requied field</p>
+        <form name="=Mform" onclick="Valid()" >
+            <div class="form-group">
+            <label for="firstname">First name:</label>
+            <input type="text" class="form-control" id="firstName" placeholder="First name" name="Fname" required>
+            </div>
+            <div class="form-group">
+                <label for="lastname">Last name:</label>
+                <input type="text" class="form-control" id="lastName" placeholder="Last name" name="Lname" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email" placeholder="Email" name="fEmail" required>
+            </div>
+            <div class="form-group">
+            <label for="phoneno">Phone No.:</label>
+            <input type="text" pattern="[1-9]{1}[0-9]{9}" class="form-control" id="phoneno" name="Phone" placeholder="Phone No." required>
+            </div>
+            <div class="form-group"  >
+            <input type="submit" id="modaliID" class="btn btn-primary" onclick="create()"   value="Create"/>
+            </div>
+        </form>
+    </div>
+
+    <!-- Modal footer -->
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+    </div>
+
+    </div>
+    </div>
+    </div>
+
+</div>
+
+
+
+    
+<!------------------- The Modal 2 ----------------->
+<div>
+    <!-- The Modal -->
+    <div class="modal fade" id="myModal2" >
+    <div class="modal-dialog">
+    <div class="modal-content">
+
+    <!-- Modal Header -->
+    <div class="modal-header">
+    <h4 class="modal-title" style="display: inline">Details</h4>
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    </div>
+
+    <!-- Modal body -->
+    <div class="modal-body">
+        <p id="modalPara"></p>
+        
+    </div>
+
+    <!-- Modal footer -->
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+    </div>
+
+    </div>
+    </div>
+    </div>
+
+</div>
+
+<!------------------------------------ SCRIPT ----------------------------------------------->
+
+<script>
+ 
+var url="http://assignmentapi.aspcore.net/api/users/";
+
+
+//---------------- Reset form--------------->
+
+$("#reset").click(function(){
+    document.getElementById("modaliID").value="Create";
+    document.getElementById("firstName").value="";
+    document.getElementById("lastName").value="";
+    document.getElementById("email").value="";
+    document.getElementById("phoneno").value="";
+});
+
+
+//-------------------Edit--------------------->
+
+var selectedRow=null;
+function Value(td ,id){
+    document.getElementById("modaliID").value="Save Changes";
+    selectedRow=td.parentElement.parentElement;
+    document.getElementById("firstName").value=selectedRow.cells[0].innerText;
+    document.getElementById("lastName").value=selectedRow.cells[1].innerHTML;
+    document.getElementById("email").value=selectedRow.cells[2].innerHTML;
+    document.getElementById("phoneno").value=selectedRow.cells[3].innerHTML;
+    console.log(value=selectedRow.cells[0].innerText);
+    url=url+id;
+
+}
+ 
+//------------------Details Modal-------------------->
+function details(th){
+   
+    document.getElementById("modalPara").innerHTML ="";
+    
+    selectedRow=th.parentElement.parentElement;
+    document.getElementById("modalPara").innerHTML +="First Name :"+selectedRow.cells[0].innerText+'<br>';
+    document.getElementById("modalPara").innerHTML +="Last Name :"+selectedRow.cells[1].innerHTML+'<br>';
+    document.getElementById("modalPara").innerHTML +="Email :"+selectedRow.cells[2].innerHTML+'<br>';
+    document.getElementById("modalPara").innerHTML +="Phone No. :"+selectedRow.cells[3].innerHTML+'<br>';
+    
+}
+
+
+//-----------------delete record----------------------->
+function onDelete(td ,id_) 
+    {
+     console.log(url+id_);
+    if (confirm('Are you sure to delete this record ?')) {
+    row = td.parentElement.parentElement;
+    document.getElementById("tableR").deleteRow(row.rowIndex);
+
+   $.ajax({
+            type: "DELETE",
+            url: url+id_,
+            success: function (result) {
+              alert("Deleted");
+            } 
+        });
+    }
+}
+
+
+//-------------------create Record--------------------->
+function create()
+{
+    var rec={
+    firstName:document.getElementById("firstName").value,
+    lastName: document.getElementById("lastName").value,
+    email: document.getElementById("email").value,
+    phone: document.getElementById("phoneno").value
+    };
+    
+    $.post(url,rec,function(data){
+    if(data.success)
+    {
+    alert("Created")
+    console.log("success");
+    getRecord(0);   
+    location.reload();
+    }
+    else
+    {console.log("success");}
+
+    });
+    url="http://assignmentapi.aspcore.net/api/users/";
+
+   
+}
+
+//---------------------getting record------------------->
+var k=0;
+var p=0;
+function getRecord(iValue){
+    $.getJSON('http://assignmentapi.aspcore.net/api/users', function(jd) {
+    var s='';
+    var l;
+
+    if(iValue==0)
+    l=iValue+9;
+    else{
+    l=iValue;
+    iValue=l-9;
+    }
+
+    if(l>jd.data.length)
+    {
+    nextEnd(l);
+    p=1;
+    l=jd.data.length-1;    
+    }
+
+    console.log(l);
+    for(let i=iValue;i<=l ;i++)
+    {
+        var value=jd.data[i].id;
+        let c=0;
+        s=s+"<tr>";
+        if(i<=l){
+
+        for(var x in fn=jd.data[i])
+        {
+            if(c>0 && c<5)
+            {
+            if(c==1){
+            s +='<td class="formdata"><a onclick="details(this)" data-toggle="modal" href="#myModal2" >'+fn[x]+'</a></td>';
+            }
+            else
+            s +='<td class="formdata">'+fn[x]+'</td>';
+            }
+            c++;
+        }
+       
+        s=s+`
+        <td>
+                <a class="edit" onClick="Value(this,`+value+`)" title="Edit" data-toggle="modal" href="#myModal"><i class="material-icons">&#xE254;</i></a>
+                <a class="delete" onClick="onDelete(this,`+value+`)" title="Delete" ><i class="material-icons " style="color: #E34724;">&#xE872;</i></a>
+        </td></tr>`;
+        document.getElementById('tr1').innerHTML=s;
+          
+        }
+    }
+    });
+}
+
+getRecord(0);
+
+
+$("#pageNext").click(function(){
+    if(p!=1){
+    k++;
+    getRecord((9+10*k));
+    document.getElementById("tr1").innerHTML="";  
+    }     
+});  
+
+$("#pagePrev").click(function(){
+    p=0;
+    if(k!=0)
+    k--;
+    
+    if(k==0)
+    getRecord(0);
+    else        
+    getRecord((9+10*k));
+});
+
+function nextEnd(l){
+    k=(l-9)/10; 
+    p=1;  
+    }
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+
+function Valid()								 
+{ 
+	var fname = document.forms["Mform"]["Fname"];			 
+	var lname = document.forms["Mform"]["Lname"]; 
+	var email = document.forms["Mform"]["fEmail"]; 
+	var phone = document.forms["Mform"]["Phone"]; 
+
+	// if (fname.value == "")								 
+	// { 
+	// 	window.alert("Please enter your name."); 
+	// 	name.focus(); 
+	// 	return false; 
+	// } 
+
+	// if (lname.value == "")							 
+	// { 
+	// 	window.alert("Please enter your address."); 
+	// 	name.focus(); 
+	// 	return false; 
+	// } 
+	
+	if (email.value == "")								 
+	{ 
+		window.alert("Please enter a valid e-mail address."); 
+		email.focus(); 
+		return false; 
+	} 
+
+	if (email.value.indexOf("@", 0) < 0)				 
+	{ 
+		window.alert("Please enter a valid e-mail address."); 
+		email.focus(); 
+		return false; 
+	} 
+
+	if (email.value.indexOf(".", 0) < 0)				 
+	{ 
+		window.alert("Please enter a valid e-mail address."); 
+		email.focus(); 
+		return false; 
+	} 
+
+	if (phone.value.pattern != "[1-9]{1}[0-9]{9}")						 
+	{ 
+		window.alert("Please enter your telephone number."); 
+		phone.focus(); 
+		return false; 
+	} 
+
+    // if (phone.pattern!="[1-9]{1}[0-9]{9}")						 
+	// { 
+	// 	window.alert("Please enter your telephone number."); 
+	// 	phone.focus(); 
+	// 	return false; 
+	// } 
+
+	return true; 
+}
+
+
+
+
+</script>
+
+</body>
+</html>

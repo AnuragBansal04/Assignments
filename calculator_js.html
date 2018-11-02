@@ -1,0 +1,286 @@
+
+<html>    
+ <head>
+
+    <style>
+
+    .main{
+    margin:auto;
+    margin-top: 8%;
+    border: 1px solid black;
+    width:400px;
+    height: 450px;
+    border-radius: 25px;
+    background-color: black;
+    
+    }
+    .D{
+    margin-top: 20px;
+    margin-left: 20px;
+    border: 1px solid white;
+    width:90%;
+    height: 100px;
+    background-color: white;
+    display: inline-block;
+    border-radius: 5px;
+    }
+    .D1{
+    
+/* border: 1px solid black; */
+    width:100%;
+    height: 50px;
+    display: inline-block;
+    }
+    .D3{
+
+    /* border: 1px solid black; */
+    width:100%;
+    height: 49px;
+    display: inline-block;
+    }
+
+    .D2{
+    
+    margin-top: 0px;
+    margin-left: 0px;
+    /* border: 1px solid black; */
+    width:100%;
+    height: 325px;
+    display: inline-block;
+
+    }
+    .tb{
+        margin-top: 10px;
+        margin-left: 0px;
+        border: 1px solid blue;
+    }
+    
+    .bn1{
+   
+    padding: 0px;
+    width:71px;
+    height: 75px;
+    display: inline-block;
+    font-size: 20px;
+    /* background-color: gray; */
+    /* opacity: 0.5; */
+    }
+    .bn2{
+    padding: 10px;
+    width:72px;
+    height: 300px;
+    display: inline-block;
+    /* background-color: #8e4801; */
+    }
+
+
+    .bn1:hover {
+      background-color: #3e8e41;
+      color: white;
+    }
+
+    .bn2:hover {
+      background-color: #d16f0c;
+      color: white;
+    }
+
+    </style>
+    </head>
+<body background="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTddeOBeud92Yeoj2ke_OMOGunStQ0lUdujdksgcZq3suOqAJKz">
+  <h1 style="font-size: 60px; text-align: center; margin-bottom: 0px;text-shadow:5px 5px 10px gray;">CALCULATOR</h1>
+    <div class="main">
+        <div class="D">
+       <div class="D1">
+           <p id="dis" style="float: right; font-size: 20px;"></p>
+       </div>
+       <div class="D3">
+        <p id="dis2" style="float: right; font-size: 25px;"></p>
+       </div>
+    <div>
+         <div class="D2">
+                <table  class="tb" cellpadding="0px" cellspacing="0px" width="200px" height="300px">
+                        <tr >
+                                <td><button onclick="disp(7) , ele(7)"  type="button" class="bn1"> 7</button></td>
+                                <td><button onclick="disp(8) ,ele(8)" type="button" class="bn1"> 8</button></td>
+                                <td><button onclick="disp(9),ele(9)" type="button" class="bn1"> 9</button></td>
+                                <td><button onclick="disp('/'),ele('/')" type="button" class="bn1"> /</button></td>
+                                <td rowspan="4"><button onclick="ele('=')" type="button" class="bn2"><b> =</b></button></td>
+                        </tr>
+                        <tr> 
+                                <td><button onclick="disp(4), ele(4)" type="button" class="bn1"> 4</button></td>
+                                <td><button onclick="disp(5),ele(5)" type="button" class="bn1"> 5</button></td>
+                                <td><button onclick="disp(6),ele(6)" type="button" class="bn1"> 6</button></td>
+                                <td><button onclick="disp('*'),ele('*')" type="button" class="bn1"> *</button></td>
+                        </tr>
+                        <tr>
+                                <td><button onclick="disp(1),ele(1)" type="button" class="bn1"> 1</button></td>
+                                <td><button onclick="disp(2),ele(2)" type="button" class="bn1">2</button></td>
+                                <td><button onclick="disp(3),ele(3)" type="button" class="bn1"> 3</button></td>
+                                <td><button onclick="disp('-'),ele('-')" type="button" class="bn1"> -</button></td>
+                        </tr>
+                        <tr>
+                                <td><button onclick="Clear()" type="button" class="bn1"> c</button></td>
+                                <td><button onclick="disp(0),ele(0)" type="button" class="bn1"> 0</button></td>
+                                <td><button onclick="disp('.'),ele('.')" type="button" class="bn1"> .</button></td>
+                                <td><button onclick="disp('+'),ele('+')" type="button" class="bn1"> +</button></td>
+                        </tr>
+            
+                </table>   
+         
+       </div>
+    </div>
+    <script>
+      let n=0;
+      let numb=[];
+      let opr=[];
+      let p;
+      let q;
+      let o;
+      let i;
+      let s='';
+      let dot;
+      let sd="";
+      let flag;
+          function disp(x){
+        s=s+x;
+        document.getElementById("dis").innerHTML= s;
+   
+        }
+
+ 
+        function Clear(){
+          document.getElementById("dis").innerHTML="";
+          document.getElementById("dis2").innerHTML="";
+          s="";
+          numb.splice(0);
+          n=0;
+          opr.splice(0);
+
+        }
+
+        function ele(x){
+         if(x=='.')
+         {
+           dot='.';
+           sd=n+'.';
+         }
+        
+         if(dot=='.')
+         {
+           if(!isNaN(x))
+           {
+           sd=sd+x;
+           console.log(sd +"   sd1");
+           }
+           if(isNaN(x) && x!='.')
+          {
+           dot='';
+           console.log(sd+"  sd2")
+           n=Number(sd);
+           console.log(sd +"   sd");
+          // console.log(sd.substring(0,sd.length-1));
+           console.log(n+"   n");
+           sd='';
+          }
+         }
+         else 
+         {
+           console.log(n+"  n1");
+           if(!isNaN(x))
+           n=n*10+x;
+
+           console.log(n+"  n2");
+         }
+
+         if(isNaN(x) && x!='=' && x!='.')
+         {
+             if(n!=0)
+             { numb.push(n);
+              n=0;
+             }
+              opr.push(x);
+              console.log(opr[0]+"  "+opr[1]+"  "+opr[2] +"       opr")
+         }
+
+         if(x=='='){
+           numb.push(n);
+           n=0;
+             cal1();
+         }
+        }
+            
+        function cal1(){
+           l=opr.length;
+             m=0;
+            for(i=0;i<l;i++)
+            {
+                console.log(i+"   iii");
+              
+                console.log("  sa  "+numb);
+            console.log(" sao  "+opr);
+         
+            
+            if(opr[1]=='*' || opr[1]=='/')
+            {
+            p=numb[1];
+            q=numb[2];
+            numb.splice(1,2);
+            o=opr[1];
+            opr.splice(1,1);
+            console.log("  "+opr);
+            flag=1;
+            }
+            else{
+            p=numb[0];
+            q=numb[1];
+            numb.splice(0, 2);
+            o=opr[0];
+            opr.splice(0,1);
+            }
+            m++;
+           
+                cal(p,q,o);
+                
+            }
+        }
+
+         function cal(p,q,o){
+            
+ console.log(p+"   p");
+
+ console.log(q+"    q");
+
+ console.log(o+"     o");
+
+           switch (o) {
+           case '+':
+             c=p+q;
+             break;
+           case '*':
+             c=p*q;
+             break;
+           case '/':
+             c=p/q;
+             break;
+           case '-':
+             c=p-q;
+             break;
+           }
+           if(flag==1){
+           numb.splice(1, 0, c);
+           flag=0;
+           }
+           else{
+            numb.unshift(c);
+           }
+            console.log(c);
+          
+           document.getElementById("dis2").innerHTML= "="+c;   
+       
+         }
+
+
+    </script>
+</body>    
+</html>
+               
