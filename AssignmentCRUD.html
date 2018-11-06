@@ -152,10 +152,14 @@ function Value(td ,id){
     document.getElementById("email").value=selectedRow.cells[2].innerHTML;
     document.getElementById("phoneno").value=selectedRow.cells[3].innerHTML;
     console.log(value=selectedRow.cells[0].innerText);
-   
+
     url=url+id;
 
 }
+
+$(".close,.btn btn-danger").click(function(){
+    url="http://assignmentapi.aspcore.net/api/users/";
+});
 
  
 //------------------Details Modal-------------------->
