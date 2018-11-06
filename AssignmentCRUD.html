@@ -56,7 +56,7 @@
     <!-- Modal body -->
     <div class="modal-body">
         <p>Please fill requied field</p>
-        <form name="=Mform" onclick="Valid()" >
+        <form name="=Mform" >
             <div class="form-group">
             <label for="firstname">First name:</label>
             <input type="text" class="form-control" id="firstName" placeholder="First name" name="Fname" required>
@@ -71,10 +71,10 @@
             </div>
             <div class="form-group">
             <label for="phoneno">Phone No.:</label>
-            <input type="text" pattern="[1-9]{1}[0-9]{9}" class="form-control" id="phoneno" name="Phone" placeholder="Phone No." required>
+            <input type="text" class="form-control" id="phoneno" name="Phone" placeholder="Phone No." required>
             </div>
             <div class="form-group"  >
-            <input type="submit" id="modaliID" class="btn btn-primary" onclick="create()"   value="Create"/>
+            <input type="button" id="modaliID" class="btn btn-primary" onclick="Valid()"   value="Create"/>
             </div>
         </form>
     </div>
@@ -152,9 +152,15 @@ function Value(td ,id){
     document.getElementById("email").value=selectedRow.cells[2].innerHTML;
     document.getElementById("phoneno").value=selectedRow.cells[3].innerHTML;
     console.log(value=selectedRow.cells[0].innerText);
+
     url=url+id;
 
 }
+
+$(".close,.btn btn-danger").click(function(){
+    url="http://assignmentapi.aspcore.net/api/users/";
+});
+
  
 //------------------Details Modal-------------------->
 function details(th){
@@ -300,30 +306,18 @@ function nextEnd(l){
 
 
 
-/////////////////////////////////////////////////////////////////////////////
+//-------------------------------Validation----------------------------------------->
 
 function Valid()								 
 { 
-	var fname = document.forms["Mform"]["Fname"];			 
-	var lname = document.forms["Mform"]["Lname"]; 
-	var email = document.forms["Mform"]["fEmail"]; 
-	var phone = document.forms["Mform"]["Phone"]; 
-
-	// if (fname.value == "")								 
-	// { 
-	// 	window.alert("Please enter your name."); 
-	// 	name.focus(); 
-	// 	return false; 
-	// } 
-
-	// if (lname.value == "")							 
-	// { 
-	// 	window.alert("Please enter your address."); 
-	// 	name.focus(); 
-	// 	return false; 
-	// } 
 	
-	if (email.value == "")								 
+    var fname =document.getElementById("firstName");
+    var lname =document.getElementById("lastName");
+    var email =document.getElementById("email");
+    var phonee =document.getElementById("phoneno");
+   console.log(email.value);
+
+	if (email.value== "")								 
 	{ 
 		window.alert("Please enter a valid e-mail address."); 
 		email.focus(); 
@@ -344,20 +338,17 @@ function Valid()
 		return false; 
 	} 
 
-	if (phone.value.pattern != "[1-9]{1}[0-9]{9}")						 
-	{ 
-		window.alert("Please enter your telephone number."); 
-		phone.focus(); 
+    var re = new RegExp("[1-9]{1}[0-9]{9}");
+    if (!re.test(phonee.value)) {
+    	window.alert("Please enter valid phone number."); 
+		phonee.focus(); 
+        console.log(phonee.value);
 		return false; 
-	} 
+       
+    }
+    console.log(document.getElementById("firstName").value);
 
-    // if (phone.pattern!="[1-9]{1}[0-9]{9}")						 
-	// { 
-	// 	window.alert("Please enter your telephone number."); 
-	// 	phone.focus(); 
-	// 	return false; 
-	// } 
-
+    create();
 	return true; 
 }
 
