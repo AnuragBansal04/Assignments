@@ -35,6 +35,7 @@
 <!--------------- pager -------------->
     <ul class="pager">
     <li class="previous" id="pagePrev"><a href="#">Previous</a></li>
+        <li id="page"></li>
     <li class="next" id="pageNext"><a href="#">Next</a></li>
     </ul>
 </div>
@@ -222,29 +223,42 @@ function create()
    
 }
 
-//---------------------getting record------------------->
-var k=0;
-var p=0;
+//---------------------getting record and pagination------------------->
+var k=0;                //for page
+var p=0;                //for setting next page end
+var flag=0;             //for showing page number
 function getRecord(iValue){
     $.getJSON('http://assignmentapi.aspcore.net/api/users', function(jd) {
     var s='';
     var l;
-
+    
+    //Setting values for for loop
     if(iValue==0)
+    {
     l=iValue+9;
+    if(flag==0)
+    {
+    for(let i=1;i<=Math.ceil(jd.data.length/10);i++){
+        var iReset=i*10-1;
+      document.getElementById("page").innerHTML +="<a onclick='getRecord("+iReset+")'>"+i+"</a>";
+    }
+    flag++;
+    }
+    }
     else{
+    k=(iValue-9)/10;
     l=iValue;
     iValue=l-9;
     }
 
-    if(l>jd.data.length)
+    if(l>=jd.data.length)
     {
-    nextEnd(l);
-    p=1;
-    l=jd.data.length-1;    
+    nextEnd(l);   
+    l=jd.data.length-1;  
     }
+    else
+    p=0;
 
-    console.log(l);
     for(let i=iValue;i<=l ;i++)
     {
         var value=jd.data[i].id;
@@ -275,16 +289,19 @@ function getRecord(iValue){
         }
     }
     });
+    
 }
 
 getRecord(0);
 
 
 $("#pageNext").click(function(){
+    console.log("hello");
     if(p!=1){
     k++;
     getRecord((9+10*k));
     document.getElementById("tr1").innerHTML="";  
+    console.log(k+"      k in next");
     }     
 });  
 
@@ -297,9 +314,11 @@ $("#pagePrev").click(function(){
     getRecord(0);
     else        
     getRecord((9+10*k));
+    console.log(9+10*k);
 });
 
 function nextEnd(l){
+    if(k<((l-9)/10))
     k=(l-9)/10; 
     p=1;  
     }
